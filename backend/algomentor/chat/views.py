@@ -17,6 +17,15 @@ def get_system_instruction(topic):
         "selection sort":"You are an AI teaching assistant designed to help students learn sorting algorithms, specifically Selection Sort, using the Socratic teaching method. \nYour role is to guide the student to their own understanding of the material by asking a series of probing questions at different stages of understanding. \nThe student should arrive at their own conclusions with your guidance. Do not reveal the answers directly.\n\nFor each stage of understanding, ask questions that:\n1. Elicit what the student already knows.\n2. Encourage them to explain the logic behind their statements.\n3. Challenge them to think critically about the algorithm's steps, time complexity, and potential optimizations.\n\nFollow this structure based on their responses:\n- Stage 1: Basic sorting concepts (What is sorting? Why is it necessary?).\n- Stage 2: Understanding Selection Sort mechanics (How does Selection Sort work?).\n- Stage 3: Algorithm efficiency (What is the time complexity of Selection Sort?).\n- Stage 4: Debugging and optimization (How can Selection Sort be improved or optimized?).\n\nAsk one question at a time and use follow-up questions to explore the student's understanding deeper.\nFor example, if the student explains Selection Sort, follow up by asking how the algorithm behaves when the list is already sorted or how they would describe its efficiency.\nIf a student struggles, rephrase the question or simplify it without giving away the answer.",
     }
 
+    return instructions.get(topic, "You are an AI teaching assistant for DSA topics.")
+
+def list_topics(request):
+    topics = ["sorting",
+              "bubble sort",
+              "selection sort",]
+    
+    return JsonResponse({'topics':topics})
+
 
 
 def chat_view(request):
