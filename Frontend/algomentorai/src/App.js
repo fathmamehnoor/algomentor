@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Import React Router
 import './App.css';
+import axios from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; 
@@ -32,10 +33,16 @@ const ChatWindow = () => {
 // Input Area component
 const InputArea = () => {
   const [message, setMessage] = useState("");
+  const [chatResponse, setChatResponse] = useState("");
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim()) {
-      console.log("Message sent:", message);
+      try {
+        const response = await axios.post("/api/chat/", { message: message, topic: "bubble sort" });
+        setChatResponse(response.data.response);  // Set chat response from the backend
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
       setMessage("");  // Clear input after sending the message
     }
   };
@@ -54,9 +61,11 @@ const InputArea = () => {
       <button className="send-button" onClick={handleSendMessage}>
         <FontAwesomeIcon icon={faPaperPlane} />  {/* Send Arrow Icon */}
       </button>
+      {chatResponse && <div className="chat-bubble bot-message">{chatResponse}</div>}
     </div>
   );
 };
+
 
 // Chat Application component (Main Chat Interface)
 const ChatApp = () => {
