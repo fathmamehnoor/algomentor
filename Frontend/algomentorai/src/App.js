@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; 
 import logo from './assets/logo.png'; 
 import SignIn from './signin';  // Import your SignIn page
-import Login from './components/logins'; 
 
 // Sidebar component
 const Sidebar = ({ onSelectTopic }) => {
@@ -142,7 +141,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/signin" element={<SignIn />} /> {/* Route for SignIn page */}
+        <Route path="/signup" element={<SignUpForm />} /> {/* Route for SignIn page */}
         <Route path="/" element={<ChatApp />} /> {/* Route for ChatApp */}
       </Routes>
     </Router>
