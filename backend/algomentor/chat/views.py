@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from .models import ChatHistory
 from django.views.decorators.csrf import csrf_exempt
 
+from django.contrib.auth.models import User
+
 
 load_dotenv()
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
@@ -79,3 +81,33 @@ def chat_view(request):
         return JsonResponse({'response': model_response})
 
     return JsonResponse({'error': 'Invalid Request'}, status=400)
+
+
+@csrf_exempt
+def signup_view(request):
+    if request.method == 'POST':
+        # Parse the JSON body
+        body = json.loads(request.body)
+
+        # Extract user details
+        first_name = body.get('first_name')
+        last_name = body.get('last_name')
+        email = body.get('email')
+        password = body.get('password')
+
+        # Create a new user
+        try:
+            user = User.objects.create_user(
+                username=email,  # Use email as username
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=password
+            )
+            user.save()
+            return JsonResponse({"message": "User created successfully"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+

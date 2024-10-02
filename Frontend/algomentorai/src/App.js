@@ -141,7 +141,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/signin" element={<SignIn />} /> {/* Route for SignIn page */}
+        <Route path="/signup" element={<SignUpForm />} /> {/* Route for SignIn page */}
         <Route path="/" element={<ChatApp />} /> {/* Route for ChatApp */}
       </Routes>
     </Router>
