@@ -6,7 +6,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; 
 import logo from './assets/logo.png'; 
-import SignIn from './signin';  // Import your SignIn page
+import SignUpForm from './signup';
+import LoginPage from './logins';  // Import your SignIn page
 
 // Sidebar component
 const Sidebar = ({ onSelectTopic }) => {
@@ -142,6 +143,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/signup" element={<SignUpForm />} /> {/* Route for SignIn page */}
+        <Route path="/logins" element={<LoginPage />} /> {/* Route for ChatApp */}
         <Route path="/" element={<ChatApp />} /> {/* Route for ChatApp */}
       </Routes>
     </Router>

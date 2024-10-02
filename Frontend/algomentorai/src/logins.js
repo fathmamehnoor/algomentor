@@ -1,7 +1,7 @@
 // LoginPage.js
 import React,{ useState } from 'react';
 import './logins.css';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
+//import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
 
 function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);  // State for toggling password visibility
