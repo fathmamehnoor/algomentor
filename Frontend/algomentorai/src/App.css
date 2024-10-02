@@ -103,7 +103,7 @@ input[type="text"] {
   padding: 15px;
   max-width: 60%;
   border-radius: 15px;
-  align-self: flex-start; /* Align to the left for bot messages */
+  align-self: flex-end; /* Align to the left for bot messages */
   margin-bottom: 10px; /* Space between messages */
 }
 
@@ -113,7 +113,7 @@ input[type="text"] {
   padding: 15px;
   max-width: 60%;
   border-radius: 15px;
-  align-self: flex-end; /* Align to the right for user messages */
+  align-self: flex-start; /* Align to the right for user messages */
   margin-bottom: 10px; /* Space between messages */
 }
 
