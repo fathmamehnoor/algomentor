@@ -1,5 +1,5 @@
 djangorestframework
 Django
-dotenv
+python-dotenv
 django-cors-headers
 google-generativeai
