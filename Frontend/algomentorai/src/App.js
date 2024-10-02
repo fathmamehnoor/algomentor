@@ -29,7 +29,7 @@ const Sidebar = ({ onSelectTopic }) => {
         <img src={logo} alt="Logo" className="logo" />
       </div>
       <h2 className="title">AlgoMentorAI</h2>
-      <ul className="topics-list">
+      <ul className="topics-list" >
         {topics.map((topic, index) => (
           <li key={index}>
             <button className="topic-button" onClick={() => onSelectTopic(topic)}>
