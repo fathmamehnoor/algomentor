@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Import React Router
 import './App.css';
 import axios from "axios";
@@ -43,10 +43,19 @@ const Sidebar = ({ onSelectTopic }) => {
   );
 };
 
-// Chat Window component
+// Chat Window component with auto-scroll to the latest message
 const ChatWindow = ({ messages }) => {
+  const chatWindowRef = useRef(null);
+
+  // Auto scroll to the bottom when new messages arrive
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="chat-window">
+    <div className="chat-window" ref={chatWindowRef}>
       {messages.map((msg, index) => (
         <div key={index} className={`chat-bubble ${msg.isUser ? 'user-message' : 'bot-message'}`}>
           {msg.text}
@@ -55,7 +64,6 @@ const ChatWindow = ({ messages }) => {
     </div>
   );
 };
-
 
 // Input Area component
 const InputArea = ({ topic, onNewMessage }) => {
@@ -105,8 +113,6 @@ const InputArea = ({ topic, onNewMessage }) => {
   );
 };
 
-
-
 // Chat Application component (Main Chat Interface)
 const ChatApp = () => {
   const [selectedTopic, setSelectedTopic] = useState(''); // State to store selected topic
@@ -134,15 +140,14 @@ const ChatApp = () => {
   );
 };
 
-
 // Main App component with routing
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/signup" element={<SignUpForm />} /> {/* Route for SignIn page */}
-        <Route path="/logins" element={<LoginPage />} /> {/* Route for ChatApp */}
-        <Route path="/" element={<ChatApp />} /> {/* Route for ChatApp */}
+        <Route path="/" element={<LoginPage />} /> {/* Route for ChatApp */}
+        <Route path="/chat" element={<ChatApp />} /> {/* Route for ChatApp */}
       </Routes>
     </Router>
   );

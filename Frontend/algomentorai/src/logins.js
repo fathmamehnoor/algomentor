@@ -22,7 +22,7 @@ const LoginPage = () => {
   
       if (response.status === 200) {
         // Successfully logged in, redirect
-        navigate('/'); // Redirect to the chat window (ChatApp)
+        navigate('/chat'); // Redirect to the chat window (ChatApp)
       } else {
         setError(response.data.error || 'Invalid login credentials');
       }
