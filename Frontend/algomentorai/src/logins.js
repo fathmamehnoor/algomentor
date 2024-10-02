@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './logins.css';
+import './style.css'; // Use the same stylesheet as SignUpForm
 
 const LoginPage = () => {
-  const [email, setEmail] = useState(''); // Change to email
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -17,12 +17,11 @@ const LoginPage = () => {
         email,
         password,
       }, {
-        withCredentials: true, // Important for sending cookies with requests
+        withCredentials: true,
       });
   
       if (response.status === 200) {
-        // Successfully logged in, redirect
-        navigate('/chat'); // Redirect to the chat window (ChatApp)
+        navigate('/chat');
       } else {
         setError(response.data.error || 'Invalid login credentials');
       }
@@ -31,32 +30,35 @@ const LoginPage = () => {
       setError('Login failed. Please try again.');
     }
   };
-  
 
   return (
-    <div className="login-page">
-      <h2>Login</h2>
+    <div className="form-container">
+      <div className="form-header">AlgoMentorAI</div>
       <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label> {/* Change label to Email */}
+        <div className="input-group">
+          <label htmlFor="email">Email:</label>
           <input
-            type="email"  // Change to type="email"
-            value={email}  // Update state variable
+            type="email"
+            id="email"
+            placeholder="Ex: abc123@gmail.com"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="input-group">
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
+            id="password"
+            placeholder="Your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Login</button>
+        {error && <div className="error-message">{error}</div>}
+        <button type="submit" className="submit-btn">Login</button>
       </form>
     </div>
   );

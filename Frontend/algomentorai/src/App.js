@@ -56,6 +56,7 @@ const ChatWindow = ({ messages }) => {
 
   return (
     <div className="chat-window" ref={chatWindowRef}>
+      {/* Ensure that messages are rendered in the correct order */}
       {messages.map((msg, index) => (
         <div key={index} className={`chat-bubble ${msg.isUser ? 'user-message' : 'bot-message'}`}>
           {msg.text}
