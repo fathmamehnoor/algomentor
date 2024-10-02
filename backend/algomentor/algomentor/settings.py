@@ -48,16 +48,26 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+
+# If you're using Django CSRF, also ensure your settings include:
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    'https://localhost:3000',
+    'http://*.localhost:3000',
+    'https://*.localhost:3000'
+]
+
 
 ROOT_URLCONF = 'algomentor.urls'
 
@@ -122,6 +132,13 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Enable CSRF protection
+CSRF_COOKIE_HTTPONLY = False  # Make it accessible to JavaScript
+CSRF_USE_SESSIONS = False  # Optional: Depends on your CSRF implementation
+CORS_ALLOW_CREDENTIALS = True 
+CSRF_COOKIE_SECURE = False
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -134,3 +151,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 load_dotenv()
 GEMIN_API_KEY = os.getenv('GEMINI_API_KEY')
+
+CORS_ALLOW_ALL_ORIGINS = True

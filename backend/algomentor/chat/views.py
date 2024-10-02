@@ -1,9 +1,12 @@
 from django.shortcuts import render
 import os
+import json
 import google.generativeai as genai
 from dotenv import load_dotenv
 from django.http import JsonResponse
 from .models import ChatHistory
+from django.views.decorators.csrf import csrf_exempt
+
 
 load_dotenv()
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
@@ -27,11 +30,16 @@ def list_topics(request):
     return JsonResponse({'topics':topics})
 
 
-
+@csrf_exempt
 def chat_view(request):
     if request.method == 'POST':
-        user_input = request.post.get('message')
-        topic = request.post.get('topic', 'bubblesort')
+        # Parse the JSON body
+        body = json.loads(request.body)
+        user_input = body.get('message')  # Get the message from the JSON body
+        topic = body.get('topic', 'bubblesort')
+
+        if not user_input:  # Check if user_input is empty
+            return JsonResponse({'error': 'Message cannot be empty'}, status=400)
 
         system_instruction = get_system_instruction(topic)
 
@@ -44,12 +52,12 @@ def chat_view(request):
         }
 
         model = genai.GenerativeModel(
-                model_name="gemini-1.5-flash",
-                generation_config=generation_config,
-                system_instruction=system_instruction
-            )
+            model_name="gemini-1.5-flash",
+            generation_config=generation_config,
+            system_instruction=system_instruction
+        )
         
-        chat_history = ChatHistory.objects.filter(user_id = request.user.id, topic = topic).first()
+        chat_history = ChatHistory.objects.filter(user_id=request.user.id, topic=topic).first()
         if chat_history:
             history = chat_history.history
         else:
@@ -59,15 +67,15 @@ def chat_view(request):
         response = chat_session.send_message(user_input)
         model_response = response.text
 
-        history.append({'role':'user', 'parts':[user_input]})
-        history.append({'role':'model', 'parts':[model_response]})
+        history.append({'role': 'user', 'parts': [user_input]})
+        history.append({'role': 'model', 'parts': [model_response]})
 
         if chat_history:
             chat_history.history = history
             chat_history.save()
         else:
-            ChatHistory.objects.create(user_id = request.user.id, topic = topic, history=history)
+            ChatHistory.objects.create(user_id=request.user.id, topic=topic, history=history)
 
-        return JsonResponse({'response':model_response})
-    
-    return JsonResponse({'error':'Invalid Request'}, status=400)
+        return JsonResponse({'response': model_response})
+
+    return JsonResponse({'error': 'Invalid Request'}, status=400)

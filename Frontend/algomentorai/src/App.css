@@ -106,3 +106,20 @@ input[type="text"] {
 .send-button:hover {
   background-color: #4c4cff;
 }
+
+.topic-button {
+  background-color: rgba(217, 222, 202, 1);  /* Blue color */
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.topic-button:hover {
+  background-color: rgba(217, 222, 202, 1);  /* Darker blue on hover */
+}

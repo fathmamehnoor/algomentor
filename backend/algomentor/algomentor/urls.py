@@ -20,10 +20,8 @@ from chat.views import chat_view, list_topics
 
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chat/', chat_view, name='chat'),
-    path('topics/', list_topics, name='list_topics'),
-
+    path('api/chat/', chat_view, name='chat'),  # Add 'api/' prefix
+    path('api/topics/', list_topics, name='list_topics'),  # Add 'api/' prefix
 ]
