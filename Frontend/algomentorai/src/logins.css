@@ -1,0 +1,140 @@
+/* LoginPage.css */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ebd0;
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e9ebd0;
+  }
+  
+  .login-box {
+    background-color: #0b184a;
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    text-align: center;
+  }
+  
+  .title {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .tab-button {
+    background-color: #0b184a;
+    color: white;
+    border: 3px;
+    border-color: black;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .tab-button.active {
+    background-color: white;
+    color: #0b184a;
+    border: 2px solid white;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .input-group label {
+    color: white;
+    font-size: 0.9rem;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-top: 5px;
+  }
+  
+  /* .password-input {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .toggle-password {
+    background: white;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+  } */
+
+  /* Styles for the password input */
+.password-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Style for the toggle password button */
+.toggle-password {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  font-size: 18px;
+  color: #999;
+}
+
+.toggle-password:hover {
+  color: #333;
+}
+
+  
+  .login-button {
+    background-color: white;
+    color: #0b184a;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* .password-input {
+    position: relative;
+  }
+  
+  .password-input input {
+    width: 100%;
+    padding-right: 40px;  /* Ensure space for the icon */
+  /* }
+  
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;  /* Adjust icon size */
+    

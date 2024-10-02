@@ -1,0 +1,148 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'League Spartan', sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw; /* Full width */
+  background: linear-gradient(rgba(227, 229, 219, 1), rgba(217, 222, 202, 1));
+}
+
+.sidebar {
+  background-color: #030e45;
+  width: 25%; /* Sidebar width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.title {
+  color: rgba(217, 222, 202, 1);
+  font-size: 24px;
+  text-align: center;
+  margin-top: 20px;
+  word-wrap: break-word;
+}
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 75%; /* Main content width */
+  height: 100vh; /* Full vertical height */
+  padding: 20px;
+}
+
+/* Chat window container */
+.chat-window {
+  position: relative; /* Enables absolute positioning of chat bubbles */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto; /* Enable scrolling */
+  padding: 20px;
+}
+
+/* Input area */
+.input-area {
+  width: 100%; /* 100% width for input */
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-top: 2px solid black;
+  justify-content: space-between; /* Send button aligned to the right */
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  outline: none;
+}
+
+.send-button {
+  background-color: #030e45;
+  color: white;
+  padding: 15px;
+  margin-left: 10px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.send-button:hover {
+  background-color: #4c4cff;
+}
+
+/* Chat bubbles */
+
+/* Adjusting bot-message to the right */
+.bot-message {
+  background-color: #f5f5f5;
+  color: black;
+  padding: 15px;
+  max-width: 60%;
+  border-radius: 15px;
+  position: absolute; /* Position this element relative to .chat-window */
+  bottom: 20px; /* Keep bottom aligned */
+  right: 20px;  /* Aligns the bot message to the right */
+}
+
+/* Adjusting user-message to the left with a slightly lower position */
+.user-message {
+  background-color: rgba(3, 14, 69, 0.8);
+  color: white;
+  padding: 15px;
+  max-width: 60%;
+  border-radius: 15px;
+  position: absolute; /* Position this element relative to .chat-window */
+  bottom: 60px; /* Slightly lower than the bot message */
+  left: 20px; /* Aligns the user message to the left */
+}
+/* Sidebar.css */
+
+.topics-list {
+  list-style-type: none; /* Removes default list styling */
+  padding: 0; /* Removes default padding */
+  margin: 0; /* Removes default margin */
+}
+
+.topics-list li {
+  margin: 10px 0; /* Adds space between list items */
+}
+
+.topic-button {
+  background-color: #f5f5f5 ; /* Blue background */
+  color: #030e45; /* White text */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 15px; /* Padding around the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.topic-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
