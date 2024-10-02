@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from django.http import JsonResponse
 from .models import ChatHistory
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 
@@ -31,14 +32,17 @@ def list_topics(request):
     
     return JsonResponse({'topics':topics})
 
-
 @csrf_exempt
+@login_required  # Ensure the user is authenticated
 def chat_view(request):
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+
         # Parse the JSON body
         body = json.loads(request.body)
-        user_input = body.get('message')  # Get the message from the JSON body
-        topic = body.get('topic', 'bubblesort')
+        user_input = body.get('message')
+        topic = body.get('topic', 'bubble sort')
 
         if not user_input:  # Check if user_input is empty
             return JsonResponse({'error': 'Message cannot be empty'}, status=400)
@@ -58,12 +62,10 @@ def chat_view(request):
             generation_config=generation_config,
             system_instruction=system_instruction
         )
-        
-        chat_history = ChatHistory.objects.filter(user_id=request.user.id, topic=topic).first()
-        if chat_history:
-            history = chat_history.history
-        else:
-            history = []
+
+        # Retrieve chat history for the user and the topic
+        chat_history = ChatHistory.objects.filter(user=request.user, topic=topic).first()  # Use user field
+        history = chat_history.history if chat_history else []
 
         chat_session = model.start_chat(history=history)
         response = chat_session.send_message(user_input)
@@ -76,11 +78,13 @@ def chat_view(request):
             chat_history.history = history
             chat_history.save()
         else:
-            ChatHistory.objects.create(user_id=request.user.id, topic=topic, history=history)
+            # Save new chat history for the user
+            ChatHistory.objects.create(user=request.user, topic=topic, history=history)  # Use user field
 
         return JsonResponse({'response': model_response})
 
     return JsonResponse({'error': 'Invalid Request'}, status=400)
+
 
 
 @csrf_exempt
@@ -111,3 +115,20 @@ def signup_view(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+
+
+@csrf_exempt
+def login_view(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        email = body.get('email')
+        password = body.get('password')
+
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)  # Log the user in
+            return JsonResponse({"success": True, "message": "Login successful"}, status=200)
+        else:
+            return JsonResponse({"success": False, "error": "Invalid credentials"}, status=400)
+
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
