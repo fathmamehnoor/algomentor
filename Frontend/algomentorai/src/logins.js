@@ -1,66 +1,65 @@
-// LoginPage.js
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './logins.css';
-//import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
 
-function LoginPage() {
-    const [showPassword, setShowPassword] = useState(false);  // State for toggling password visibility
+const LoginPage = () => {
+  const [email, setEmail] = useState(''); // Change to email
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);  // Toggle the state
-    };
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/api/login/', {
+        email,
+        password,
+      }, {
+        withCredentials: true, // Important for sending cookies with requests
+      });
+  
+      if (response.status === 200) {
+        // Successfully logged in, redirect
+        navigate('/'); // Redirect to the chat window (ChatApp)
+      } else {
+        setError(response.data.error || 'Invalid login credentials');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      setError('Login failed. Please try again.');
+    }
+  };
+  
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h1 className="title">AlgoMentorAI</h1>
-        <div className="tabs">
-          <button className="tab-button active">LOGIN</button>
-          <button className="tab-button">SIGN UP</button>
+    <div className="login-page">
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email:</label> {/* Change label to Email */}
+          <input
+            type="email"  // Change to type="email"
+            value={email}  // Update state variable
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-        <form className="login-form">
-          <div className="input-group">
-            <label htmlFor="email">Email:</label>
-            <input type="email" id="email" placeholder="Ex: abc123@gmail.com" required />
-          </div>
-          <div className="input-group">
-            <label htmlFor="password">Password:</label>
-            <div className="password-input">
-              {/* <input type="password" id="password" placeholder="Password" required />
-              <button type="button" className="toggle-password">
-              </button> */}
-              {/* <input
-                type={showPassword ? "text" : "password"}  // Switch between text and password types
-                id="password"
-                placeholder="Password"
-                required
-              />
-              <button
-                type="button"
-                className="toggle-password"
-                onClick={togglePasswordVisibility}
-              ></button> */}
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                placeholder="Password"
-                required
-              />
-              {/* Eye icon for toggling visibility */}
-              <button
-                type="button"
-                className="toggle-password"
-                onClick={togglePasswordVisibility}
-              >
-                <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
-              </button>
-            </div>
-          </div>
-          <button type="submit" className="login-button">LOGIN</button>
-        </form>
-      </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
-}
+};
 
 export default LoginPage;

@@ -56,40 +56,36 @@ const ChatWindow = ({ messages }) => {
   );
 };
 
-// Input Area component
+
 // Input Area component
 const InputArea = ({ topic, onNewMessage }) => {
   const [message, setMessage] = useState("");
 
-  // Updated function to handle sending a message
   const handleSendMessage = async () => {
     if (message.trim()) {
-        // Add user message to the chat
-        onNewMessage({ text: message, isUser: true });
+      // Add user message to the chat immediately
+      onNewMessage({ text: message, isUser: true });
+      
+      try {
+        const response = await axios.post('http://localhost:8000/api/chat/', {
+          message: message,
+          topic: topic,
+        }, {
+          withCredentials: true, // Important if you're using cookies for auth
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        try {
-            const response = await axios.post("http://localhost:8000/api/chat/", 
-                {
-                    message: message, // Make sure message is not empty
-                    topic: topic
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json', // Set Content-Type to JSON
-                    }
-                }
-            );
+        // Add bot response to the chat
+        onNewMessage({ text: response.data.response, isUser: false });
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
 
-            // Add bot response to the chat
-            onNewMessage({ text: response.data.response, isUser: false });
-        } catch (error) {
-            console.error("Error sending message:", error);
-        }
-
-        setMessage(""); // Clear input after sending the message
+      setMessage(""); // Clear input after sending the message
     }
-};
-
+  };
 
   return (
     <div className="input-area">
@@ -110,15 +106,16 @@ const InputArea = ({ topic, onNewMessage }) => {
 };
 
 
+
 // Chat Application component (Main Chat Interface)
 const ChatApp = () => {
-  const [selectedTopic, setSelectedTopic] = useState('');  // State to store selected topic
-  const [messages, setMessages] = useState([]);  // State to store chat messages
+  const [selectedTopic, setSelectedTopic] = useState(''); // State to store selected topic
+  const [messages, setMessages] = useState([]); // State to store chat messages
 
   // Function to handle when a topic is selected
   const handleSelectTopic = (topic) => {
     console.log('Selected topic:', topic);
-    setSelectedTopic(topic);  // Update the state with the selected topic
+    setSelectedTopic(topic); // Update the state with the selected topic
   };
 
   // Function to add a new message
@@ -130,12 +127,13 @@ const ChatApp = () => {
     <div className="container">
       <Sidebar onSelectTopic={handleSelectTopic} />
       <div className="main-area">
-        <ChatWindow messages={messages} />  {/* Pass messages to ChatWindow */}
-        <InputArea topic={selectedTopic} onNewMessage={handleNewMessage} />  {/* Pass the handler */}
+        <ChatWindow messages={messages} /> {/* Pass messages to ChatWindow */}
+        <InputArea topic={selectedTopic} onNewMessage={handleNewMessage} /> {/* Pass the handler */}
       </div>
     </div>
   );
 };
+
 
 // Main App component with routing
 const App = () => {
