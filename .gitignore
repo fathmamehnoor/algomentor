@@ -1,5 +1,6 @@
 venv/
 .env
 db.sqlite3
-__pycache__
+__pycache__/
 migrations
+backend/algomentor/algomentor/__pycache__/settings.cpython-310.pyc
