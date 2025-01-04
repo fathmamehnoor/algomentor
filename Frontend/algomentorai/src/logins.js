@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './style.css'; // Use the same stylesheet as SignUpForm
+import './style.css';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ const LoginPage = () => {
       }, {
         withCredentials: true,
       });
-  
+
       if (response.status === 200) {
         navigate('/chat');
       } else {
@@ -33,7 +34,7 @@ const LoginPage = () => {
 
   return (
     <div className="form-container">
-      <div className="form-header">AlgoMentorAI</div>
+      <div className="form-header">Algomentor</div>
       <form onSubmit={handleLogin}>
         <div className="input-group">
           <label htmlFor="email">Email:</label>
@@ -59,6 +60,10 @@ const LoginPage = () => {
         </div>
         {error && <div className="error-message">{error}</div>}
         <button type="submit" className="submit-btn">Login</button>
+        <div className="signup-link">
+          <span className="signup-text">New User? </span>
+          <Link to="/signup" className="signup-text">Sign Up</Link>
+        </div>
       </form>
     </div>
   );

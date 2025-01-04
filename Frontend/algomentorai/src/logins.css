@@ -109,15 +109,31 @@ body {
 }
 
   
-  .login-button {
-    background-color: white;
-    color: #0b184a;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+.login-button {
+  background-color: white;
+  color: #0b184a;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.signup-link {
+  margin-top: 15px !important;
+  font-size: 0.9rem !important;
+}
+
+.signup-text {
+  color: white !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+}
+
+.signup-text:hover {
+  text-decoration: underline !important;
+}
+
   
   /* .password-input {
     position: relative;
