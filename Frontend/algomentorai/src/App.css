@@ -48,6 +48,27 @@ body, html {
   background-color: #030e45; /* Background of the scrollbar track */
 }
 
+/* Logout link styling */
+.logout-link {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+  width: 100%; /* Take full width to the left */
+  justify-content: flex-start; /* Align the content to the left */
+}
+
+/* Logout icon styling */
+.logout-link svg {
+  font-size: 20px; /* Size of the icon */
+  margin-right: 8px;
+}
+
 
 .logo {
   width: 100px;

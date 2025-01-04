@@ -5,35 +5,59 @@ import axios from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; 
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import logo from './assets/logo.png'; 
 import SignUpForm from './signup';
 import LoginPage from './logins';  // Import your SignIn page
 
+// Sidebar component
 // Sidebar component
 const Sidebar = ({ onSelectTopic }) => {
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
     // Fetch topics from the backend
-    axios.get('http://localhost:8000/api/topics/')
-      .then(response => {
+    axios
+      .get("http://localhost:8000/api/topics/")
+      .then((response) => {
         setTopics(response.data.topics);
       })
-      .catch(error => {
-        console.error('Error fetching topics:', error);
+      .catch((error) => {
+        console.error("Error fetching topics:", error);
       });
   }, []);
 
+  const handleLogout = () => {
+    // Handle logout (e.g., clearing session, redirecting to login)
+    if (window.confirm("Are you sure you want to logout?")) {
+      window.location.href = "/"; // Redirect to login page
+      // Optionally clear any stored authentication data
+      localStorage.clear();
+    }
+  };
+
   return (
     <div className="sidebar">
+      {/* Logout link with icon */}
+      <a href="#" onClick={handleLogout} className="logout-link">
+        <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />
+        Logout
+      </a>
+
+      {/* Logo and title */}
       <div className="logo-container">
         <img src={logo} alt="Logo" className="logo" />
       </div>
       <h2 className="title">AlgoMentorAI</h2>
-      <ul className="topics-list" >
+
+      {/* Topics list */}
+      <ul className="topics-list">
         {topics.map((topic, index) => (
           <li key={index}>
-            <button className="topic-button" onClick={() => onSelectTopic(topic)}>
+            <button
+              className="topic-button"
+              onClick={() => onSelectTopic(topic)}
+            >
               {topic}
             </button>
           </li>
@@ -42,6 +66,7 @@ const Sidebar = ({ onSelectTopic }) => {
     </div>
   );
 };
+
 
 // Chat Window component with auto-scroll to the latest message
 const ChatWindow = ({ messages }) => {
