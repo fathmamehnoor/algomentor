@@ -4,14 +4,12 @@ import './App.css';
 import axios from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; 
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faSignOutAlt, faRedo } from '@fortawesome/free-solid-svg-icons';
 import logo from './assets/logo.png'; 
 import SignUpForm from './signup';
 import LoginPage from './logins';  // Import your SignIn page
 
-// Sidebar component
-// Sidebar component
+
 const Sidebar = ({ onSelectTopic }) => {
   const [topics, setTopics] = useState([]);
 
@@ -31,26 +29,22 @@ const Sidebar = ({ onSelectTopic }) => {
     // Handle logout (e.g., clearing session, redirecting to login)
     if (window.confirm("Are you sure you want to logout?")) {
       window.location.href = "/"; // Redirect to login page
-      // Optionally clear any stored authentication data
-      localStorage.clear();
+      localStorage.clear(); // Optionally clear any stored authentication data
     }
   };
 
   return (
     <div className="sidebar">
-      {/* Logout link with icon */}
       <a href="#" onClick={handleLogout} className="logout-link">
         <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />
         Logout
       </a>
 
-      {/* Logo and title */}
       <div className="logo-container">
         <img src={logo} alt="Logo" className="logo" />
       </div>
       <h2 className="title">AlgoMentorAI</h2>
 
-      {/* Topics list */}
       <ul className="topics-list">
         {topics.map((topic, index) => (
           <li key={index}>
@@ -67,12 +61,10 @@ const Sidebar = ({ onSelectTopic }) => {
   );
 };
 
-
 // Chat Window component with auto-scroll to the latest message
-const ChatWindow = ({ messages }) => {
+const ChatWindow = ({ messages, onRefreshChat }) => {
   const chatWindowRef = useRef(null);
 
-  // Auto scroll to the bottom when new messages arrive
   useEffect(() => {
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
@@ -81,7 +73,12 @@ const ChatWindow = ({ messages }) => {
 
   return (
     <div className="chat-window" ref={chatWindowRef}>
-      {/* Ensure that messages are rendered in the correct order */}
+      {/* Refresh button on the top-right */}
+      <button className="refresh-button" onClick={onRefreshChat}>
+        <FontAwesomeIcon icon={faRedo} />
+      </button>
+
+      {/* Render chat messages */}
       {messages.map((msg, index) => (
         <div key={index} className={`chat-bubble ${msg.isUser ? 'user-message' : 'bot-message'}`}>
           {msg.text}
@@ -91,33 +88,31 @@ const ChatWindow = ({ messages }) => {
   );
 };
 
-// Input Area component
+// Input Area component (unchanged)
 const InputArea = ({ topic, onNewMessage }) => {
   const [message, setMessage] = useState("");
 
   const handleSendMessage = async () => {
     if (message.trim()) {
-      // Add user message to the chat immediately
       onNewMessage({ text: message, isUser: true });
-      
+
       try {
         const response = await axios.post('http://localhost:8000/api/chat/', {
           message: message,
           topic: topic,
         }, {
-          withCredentials: true, // Important if you're using cookies for auth
+          withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
-        // Add bot response to the chat
         onNewMessage({ text: response.data.response, isUser: false });
       } catch (error) {
         console.error("Error sending message:", error);
       }
 
-      setMessage(""); // Clear input after sending the message
+      setMessage("");
     }
   };
 
@@ -129,11 +124,11 @@ const InputArea = ({ topic, onNewMessage }) => {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyPress={(e) => {
-          if (e.key === "Enter") handleSendMessage(); // Send message when pressing "Enter"
+          if (e.key === "Enter") handleSendMessage();
         }}
       />
       <button className="send-button" onClick={handleSendMessage}>
-        <FontAwesomeIcon icon={faPaperPlane} /> {/* Send Arrow Icon */}
+        <FontAwesomeIcon icon={faPaperPlane} />
       </button>
     </div>
   );
@@ -141,39 +136,40 @@ const InputArea = ({ topic, onNewMessage }) => {
 
 // Chat Application component (Main Chat Interface)
 const ChatApp = () => {
-  const [selectedTopic, setSelectedTopic] = useState(''); // State to store selected topic
-  const [messages, setMessages] = useState([]); // State to store chat messages
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [messages, setMessages] = useState([]);
 
-  // Function to handle when a topic is selected
   const handleSelectTopic = (topic) => {
-    console.log('Selected topic:', topic);
-    setSelectedTopic(topic); // Update the state with the selected topic
+    setSelectedTopic(topic);
   };
 
-  // Function to add a new message
   const handleNewMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  const handleRefreshChat = () => {
+    setMessages([]); // Clear chat messages when refresh button is clicked
   };
 
   return (
     <div className="container">
       <Sidebar onSelectTopic={handleSelectTopic} />
       <div className="main-area">
-        <ChatWindow messages={messages} /> {/* Pass messages to ChatWindow */}
-        <InputArea topic={selectedTopic} onNewMessage={handleNewMessage} /> {/* Pass the handler */}
+        <ChatWindow messages={messages} onRefreshChat={handleRefreshChat} />
+        <InputArea topic={selectedTopic} onNewMessage={handleNewMessage} />
       </div>
     </div>
   );
 };
 
-// Main App component with routing
+// Main App component with routing (unchanged)
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/signup" element={<SignUpForm />} /> {/* Route for SignIn page */}
-        <Route path="/" element={<LoginPage />} /> {/* Route for ChatApp */}
-        <Route path="/chat" element={<ChatApp />} /> {/* Route for ChatApp */}
+        <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/chat" element={<ChatApp />} />
       </Routes>
     </Router>
   );
