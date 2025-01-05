@@ -34,23 +34,23 @@ def get_system_instruction(topic):
         "Graph":"You are an AI teaching assistant designed to help students learn about data structures, specifically graphs, using the Socratic teaching method. \nYour role is to guide the student to their own understanding of the material by asking a series of probing questions at different stages of understanding. \nThe student should arrive at their own conclusions with your guidance. Do not reveal the answers directly. \n\nFor each stage of understanding, ask questions that: \n1. Elicit what the student already knows. \n2. Encourage them to explain the logic behind their statements. \n3. Challenge them to think critically about graph representations, traversal algorithms, and potential applications. \n\nFollow this structure based on their responses: \n-Stage 1: Understanding graph mechanics (How does a graph work?). \nWhat are the main components of a graph, and how are vertices and edges represented? \nCan you describe how to represent a graph using an adjacency matrix or an adjacency list? \n-Stage 2: Graph efficiency (What is the time complexity of common graph operations, such as traversal?). \nHow do algorithms like Depth-First Search (DFS) and Breadth-First Search (BFS) perform on different types of graphs? \n-Stage 3: Debugging and optimization (In what scenarios could graph algorithms be inefficient, and how could they be optimized?). \nAsk one question at a time and use follow-up questions to explore the student's understanding deeper. \nFor example, if the student explains graph traversal, you might ask how the choice of traversal method affects performance, what happens in a graph with cycles, or how graph algorithms can be optimized for large datasets. \nIf a student struggles, rephrase the question or simplify it without giving away the answer."
 
         }
-    return instructions.get(topic, "You are an socratic method AI teaching assistant for DSA topics designed to help students learn the basic concepts of sorting using the Socratic teaching method.")
+    return instructions.get(topic, "You are an socratic method AI teaching assistant for DSA topics designed to help students learn the basic concepts of DSA using the Socratic teaching method.")
 
 def list_topics(request):
-    topics = ["sorting",
-              "bubble sort",
-              "selection sort",
-              "insertion sort",
-              "quick sort",
-              "merge sort",
-              "linear search",
-              "binary search",
-              "stack",
-              "queue",
-              "linked list",
-              "tree",
-              "hashing",
-              "graph"]
+    topics = ["Sorting",
+              "Bubble sort",
+              "Selection sort",
+              "Insertion sort",
+              "Quick sort",
+              "Merge sort",
+              "Linear search",
+              "Binary search",
+              "Stack",
+              "Queue",
+              "Linked list",
+              "Tree",
+              "Hashing",
+              "Graph"]
     
     return JsonResponse({'topics':topics})
 
@@ -62,13 +62,18 @@ def chat_view(request):
         if not request.user.is_authenticated:
             return JsonResponse({'error': 'User not authenticated'}, status=401)
 
-        # Parse the JSON body
         body = json.loads(request.body)
         user_input = body.get('message')
         topic = body.get('topic', 'bubble sort')
 
-        if not user_input:  # Check if user_input is empty
-            return JsonResponse({'error': 'Message cannot be empty'}, status=400)
+        # Check and reset topic-specific history
+        if ChatHistory.objects.filter(user=request.user, topic=topic).exists():
+            chat_history = ChatHistory.objects.filter(user=request.user, topic=topic).first()
+            if chat_history and chat_history.topic != topic:
+                chat_history.history = []
+                chat_history.save()
+        else:
+            ChatHistory.objects.create(user=request.user, topic=topic, history=[])
 
         system_instruction = get_system_instruction(topic)
 
@@ -86,12 +91,11 @@ def chat_view(request):
             system_instruction=system_instruction
         )
 
-        # Retrieve chat history for the user and the topic
-        chat_history = ChatHistory.objects.filter(user=request.user, topic=topic).first()  # Use user field
+        chat_history = ChatHistory.objects.filter(user=request.user, topic=topic).first()
         history = chat_history.history if chat_history else []
 
         chat_session = model.start_chat(history=history)
-        response = chat_session.send_message(user_input)
+        response = chat_session.send_message(user_input or "Let's get started!")
         model_response = response.text
 
         history.append({'role': 'user', 'parts': [user_input]})
@@ -100,9 +104,6 @@ def chat_view(request):
         if chat_history:
             chat_history.history = history
             chat_history.save()
-        else:
-            # Save new chat history for the user
-            ChatHistory.objects.create(user=request.user, topic=topic, history=history)  # Use user field
 
         return JsonResponse({'response': model_response})
 
