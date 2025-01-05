@@ -139,9 +139,29 @@ const ChatApp = () => {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const handleSelectTopic = (topic) => {
+  const handleSelectTopic = async (topic) => {
     setSelectedTopic(topic);
+    setMessages([]); // Clear messages when a new topic is selected
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/chat/",
+        { message: "", topic },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      // Add the bot's initial message to the chat
+      setMessages([{ text: response.data.response, isUser: false }]);
+    } catch (error) {
+      console.error("Error fetching initial question:", error);
+    }
   };
+  
 
   const handleNewMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
